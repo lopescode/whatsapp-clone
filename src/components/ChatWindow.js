@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./ChatWindow.css";
+
+/* COMPONENTS */
+import MessageItem from "./MessageItem";
 
 /* ICONS */
 import SearchIcon from "@material-ui/icons/Search";
@@ -11,36 +14,13 @@ import CloseIcon from "@material-ui/icons/Close";
 import SendIcon from "@material-ui/icons/Send";
 import MicIcon from "@material-ui/icons/Mic";
 
-export default () => {
-  {
-    /* Funcionalidade para inserir o emoji no input */
-  }
-  const [text, setText] = useState("");
-  const handleEmojiClick = (e, emojiObject) => {
-    setText(text + emojiObject.emoji);
-  };
-  {
-    /* Funcionalidade para abrir apresentar emojis */
-  }
+export default ({ user }) => {
 
-  const [emojiOpen, setEmojiOpen] = useState(false);
-  const handleOpenEmoji = () => {
-    setEmojiOpen(true);
-  };
+  /* useRef */
+  const body = useRef();
 
   {
-    /* Funcionalidade para fechar a apresentação de emojis */
-  }
-  const handleCloseEmoji = () => {
-    setEmojiOpen(false);
-  };
-
-  {
-    /* Funcionalidade para transcrever audio para texto */
-  }
-  {
-    /* Reconhecendo qual o navegador utilizado pois recognition não é 
-    compativel com alguns navegadores e definindo idioma */
+    /* SpeechRecognition props */
   }
   let recognition = null;
   let SpeechRecognition =
@@ -49,7 +29,46 @@ export default () => {
     recognition = new SpeechRecognition();
     recognition.lang = "pt";
   }
+
+  {
+    /* useStates */
+  }
+  const [text, setText] = useState("");
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const [listening, setListening] = useState(false);
+  const [list, setList] = useState([
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+    { author: 123, body: "bla bla" },
+    { author: 123, body: "bla bla bla" },
+    { author: 1234, body: "bla bla" },
+  ]);
+
+  {
+    /* handles */
+  }
+  const handleEmojiClick = (e, emojiObject) => {
+    setText(text + emojiObject.emoji);
+  };
+  const handleOpenEmoji = () => {
+    setEmojiOpen(true);
+  };
+  const handleCloseEmoji = () => {
+    setEmojiOpen(false);
+  };
   const handleMicClick = () => {
     if (recognition !== null) {
       recognition.onstart = () => {
@@ -65,8 +84,16 @@ export default () => {
       recognition.start();
     }
   };
-
   const handleSendClick = () => {};
+
+  /* useEffects */
+  /* Scrollbar props */
+  useEffect(() => {
+    // Verificando se o conteudo é maior que a altura do body
+    if( body.current.scrollHeight > body.current.offsetHeight) {
+      body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
+    }
+  }, [list])
 
   return (
     <div className="chatWindow">
@@ -92,7 +119,11 @@ export default () => {
           </div>
         </div>
       </div>
-      <div className="chatWindow--body"></div>
+      <div ref={body} className="chatWindow--body">
+        {list.map((item, key) => (
+          <MessageItem key={key} data={item} user={user} />
+        ))}
+      </div>
       <div
         className="chatWindow--emojiarea"
         style={{ height: emojiOpen ? "200px" : "0px" }}
