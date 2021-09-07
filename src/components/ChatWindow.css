@@ -93,6 +93,7 @@
 .chatWindow--pos {
     display: flex;
     margin: 0 15px;
+    cursor: pointer;
 }
 
 .chatWindow--emojiarea {

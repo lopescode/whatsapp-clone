@@ -10,28 +10,63 @@ import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import CloseIcon from "@material-ui/icons/Close";
 import SendIcon from "@material-ui/icons/Send";
 import MicIcon from "@material-ui/icons/Mic";
-import { Close } from "@material-ui/icons";
-import Mic from "@material-ui/icons/Mic";
 
 export default () => {
-  const [emojiOpen, setEmojiOpen] = useState(false);
+  {
+    /* Funcionalidade para inserir o emoji no input */
+  }
   const [text, setText] = useState("");
-
   const handleEmojiClick = (e, emojiObject) => {
     setText(text + emojiObject.emoji);
   };
+  {
+    /* Funcionalidade para abrir apresentar emojis */
+  }
 
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const handleOpenEmoji = () => {
     setEmojiOpen(true);
   };
 
+  {
+    /* Funcionalidade para fechar a apresentação de emojis */
+  }
   const handleCloseEmoji = () => {
     setEmojiOpen(false);
   };
 
-  const handleMicClick = () => {}
+  {
+    /* Funcionalidade para transcrever audio para texto */
+  }
+  {
+    /* Reconhecendo qual o navegador utilizado pois recognition não é 
+    compativel com alguns navegadores e definindo idioma */
+  }
+  let recognition = null;
+  let SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition !== undefined) {
+    recognition = new SpeechRecognition();
+    recognition.lang = "pt";
+  }
+  const [listening, setListening] = useState(false);
+  const handleMicClick = () => {
+    if (recognition !== null) {
+      recognition.onstart = () => {
+        setListening(true);
+      };
+      recognition.onend = () => {
+        setListening(false);
+      };
+      recognition.onresult = (e) => {
+        setText(e.results[0][0].transcript);
+      };
 
-  const handleSendClick = () => {}
+      recognition.start();
+    }
+  };
+
+  const handleSendClick = () => {};
 
   return (
     <div className="chatWindow">
@@ -70,7 +105,6 @@ export default () => {
       </div>
       <div className="chatWindow--footer">
         <div className="chatWindow--pre">
-          
           {/* Exibir botão de fechar emojis */}
           <div
             className="chatWindow--btn"
@@ -100,7 +134,7 @@ export default () => {
         {/* Se o texto estiver vazio, mostrar icone do microfone */}
         {text === "" && (
           <div onClick={handleMicClick} className="chatWindow--pos">
-            <MicIcon style={{ color: "#919191" }} />
+            <MicIcon style={{ color: listening ? "#126ECE" : "#919191" }} />
           </div>
         )}
         {/* Se o texto não estiver vazio, mostrar icone de enviar */}
