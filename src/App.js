@@ -7,6 +7,7 @@ import ChatIntro from "./components/ChatIntro";
 import ChatWindow from "./components/ChatWindow";
 import NewChat from "./components/NewChat";
 import Login from "./components/Login";
+import Api from "./Api";
 
 /* ICONS */
 import DonutLargeIcon from "@material-ui/icons/DonutLarge";
@@ -52,6 +53,7 @@ export default () => {
       name: u.displayName,
       avatar: u.photoURL,
     };
+    await Api.addUser(newUser);
     setUser(newUser);
   };
 

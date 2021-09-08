@@ -5,7 +5,7 @@ import "./Login.css";
 export default ({ onReceive }) => {
   /* handles */
   const handleFacebookLogin = async () => {
-    let result = await Api.Popup();
+    let result = await Api.fbPopup();
     if (result) {
       onReceive(result.user);
     } else {
