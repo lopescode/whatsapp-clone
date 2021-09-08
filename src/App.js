@@ -56,7 +56,7 @@ export default () => {
   };
 
   if (user === null) {
-    return <Login />;
+    return <Login onReceive={handleLoginData} />;
   }
   return (
     <div className="app-window">
