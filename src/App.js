@@ -17,31 +17,23 @@ import SearchIcon from "@material-ui/icons/Search";
 
 export default () => {
   /* useStates */
-  const [chatlist, setChatlist] = useState([
-    {
-      chatId: 1,
-      title: "Contato",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 2,
-      title: "Contato",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 3,
-      title: "Contato",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-    {
-      chatId: 4,
-      title: "Contato",
-      image: "https://www.w3schools.com/howto/img_avatar2.png",
-    },
-  ]);
+  const [chatlist, setChatlist] = useState([]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    id: "lM4sOoeR81N9gAHCNv1HZXjLXb73",
+    name: "Leonardo Lopes",
+    avatar: "https://graph.facebook.com/2071446382994741/picture",
+  });
   const [showNewChat, setShowNewChat] = useState(false);
+
+  /* useEffects */
+  useEffect(() => {
+    if(user !== null) {
+      let unsub = Api.onChatList(user.id, setChatlist);
+      return unsub;
+    }
+  }, [user])
 
   /* handles */
   const handleNewChat = () => {

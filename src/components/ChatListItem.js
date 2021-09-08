@@ -1,23 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ChatListItem.css";
 
 export default ({ onClick, active, data }) => {
+  /* useStates */
+  const [time, setTime] = useState("");
+
+  /* useEffects */
+  useEffect(() => {
+    if (data.lastMessageDate > 0) {
+      let d = new Date(data.lastMessageDate.seconds * 1000);
+      let hours = d.getHours();
+      let minutes = d.getMinutes();
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      setTime(`${hours}:${minutes}`);
+    }
+  });
   return (
     <div className={`chatListItem ${active ? "active" : ""}`} onClick={onClick}>
       <img className="chatListItem--avatar" src={data.image} alt="avatar"></img>
       <div className="chatListItem--lines">
         <div className="chatListItem--line">
           <div className="chatListItem--name">{data.title}</div>
-          <div className="chatListItem--date">04:20</div>
+          <div className="chatListItem--date">{time}</div>
         </div>
         <div className="chatListItem--line">
           <div className="chatListItem--lastMsg">
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-            </p>
+            <p>{data.lastMessage}</p>
           </div>
         </div>
       </div>
